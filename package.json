@@ -1,0 +1,26 @@
+{
+  "name": "jottings",
+  "version": "0.0.1",
+  "description": "some jottings",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CharlesMoone/Jottings.git"
+  },
+  "keywords": [
+    "jottings"
+  ],
+  "author": "charlesmoone",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CharlesMoone/Jottings/issues"
+  },
+  "homepage": "https://github.com/CharlesMoone/Jottings#readme",
+  "devDependencies": {
+    "webpack": "^4.32.2",
+    "webpack-cli": "^3.3.2"
+  }
+}
