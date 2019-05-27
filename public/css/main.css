@@ -36,7 +36,10 @@ article blockquote {
   color: #6a737d;
   padding: 0 1em;
 }
-article a, article a:link, article:active, article a:hover {
+article a,
+article a:link,
+article a:active,
+article a:hover {
   color: #6a737d;
   text-decoration: none;
   cursor: pointer;
