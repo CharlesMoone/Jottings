@@ -1,20 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Blog</title>
-  <script src="./js/index.bundle.mjs" type="module"></script>
-</head>
-<body>
-  <cm-banner>
-    <ul slot="my-test-text">
-      <li>123</li>
-      <li>123</li>
-      <li>123</li>
-      <li>123</li>
-    </ul>
-  </cm-banner>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Blog</title>
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/main.css" />
+    <script async src="js/index.bundle.mjs" type="module"></script>
+  </head>
+  <body>
+    <cm-banner url="img/banner" wrapped></cm-banner>
+    <article>
+      <h1>WebComponet 原生模块化初体验</h1>
+      <p>Author: meng5994197@gmail.com</p>
+      <p>
+        <a target="_blank" rel="noopener" href="https://github.com/CharlesMoone/Jottings"
+          >Github: charlesmoone</a
+        >
+      </p>
+      <p>
+        比较麻烦的是了解了 WebComponet 之后，进行的组件化设计。因为要考虑很多，数据传递，组件设计。
+      </p>
+      <h2>Problems 坑s</h2>
+      <p>
+        早期的设计，是在外部写一些结构，然后通过 slot 传入内部，然后希望可以在内部利用 ::slotted
+        来进行样式配置，但是发现似乎有问题，新版的 ::slotted
+        对复杂样式的查找居然是不支持的。具体错误参考下面代码:
+      </p>
+      <code>
+        <pre>// index.html</pre>
+        <pre>&lt;ul slot="test-slot"&gt;</pre>
+        <pre>&nbsp;&nbsp;&lt;li&gt;a&lt;/li&gt;</pre>
+        <pre>&nbsp;&nbsp;&lt;li&gt;b&lt;/li&gt;</pre>
+        <pre>&nbsp;&nbsp;&lt;li&gt;c&lt;/li&gt;</pre>
+        <pre>&nbsp;&nbsp;&lt;li&gt;d&lt;/li&gt;</pre>
+        <pre>&lt;/ul&gt;</pre>
+      </code>
+      <code>
+        <pre>// template.mtmp</pre>
+        <pre>&lt;style&gt;</pre>
+        <pre>&nbsp;&nbsp;::slotted(ul) {</pre>
+        <pre>&nbsp;&nbsp;&nbsp;&nbsp;margin: 0;</pre>
+        <pre>&nbsp;&nbsp;}{</pre>
+        <pre>&nbsp;&nbsp;::slotted(ul) li {</pre>
+        <pre>&nbsp;&nbsp;&nbsp;&nbsp;font-color: red;</pre>
+        <pre>&nbsp;&nbsp;}{</pre>
+        <pre>&lt;/style&gt;</pre>
+        <pre>&lt;slot name="test-slot"&gt;</pre>
+      </code>
+      <p>
+        实际上，这里隶属于 slot 里面的 li 并不会改成红色的字体，这里在查了一些文档之后，发现 v1
+        版本取消了复杂样式的跟踪。
+      </p>
+      <blockquote>
+        <p>可以参考一下两篇 issue:</p>
+        <a target="_blank" rel="noopener" href="https://github.com/w3c/webcomponents/issues/331"
+          >https://github.com/w3c/webcomponents/issues/331</a
+        >
+        <br />
+        <a target="_blank" rel="noopener" href="https://github.com/w3c/csswg-drafts/issues/745"
+          >https://github.com/w3c/csswg-drafts/issues/745</a
+        >
+      </blockquote>
+      <p>
+        还有一个小坑 .mtmp 文件里写 script 标签无效，这里是因为我在处理 template 的时候，在
+        webpack-loader 里，是利用 innerHTML 的语法进行导入 template ，所以无法执行 script 。
+      </p>
+      <h2>Solutions 新的解决方案</h2>
+      <p>
+        去设想新的方案，如果完全的组件化，再利用 customElement
+        可以自定义属性的特点，进行数据传递，就可以了。
+      </p>
+      <h2>Let's start</h2>
+      <h3>1. handle template file</h3>
+      <p>
+        这里我选择了用 webpack-loader 去处理 template 文件，一拍脑袋创建一个新类型 mtmp
+        ，这里是致敬了 mjs 的设计，所以我就起了个 mtmp ，讲道理，这个 tmp
+        有点临时的意思，好吧，这里就这样了。
+      </p>
+      <code>
+        <pre>// webpack-loader</pre>
+        <pre>module.exports = function(source) {</pre>
+        <pre>&nbsp;&nbsp;return `</pre>
+        <pre>&nbsp;&nbsp;&nbsp;&nbsp;const template = document.createElement('template');</pre>
+        <pre>&nbsp;&nbsp;&nbsp;&nbsp;template.innerHTML = \`${source}\`;</pre>
+        <pre>&nbsp;&nbsp;&nbsp;&nbsp;export default template;</pre>
+        <pre>&nbsp;&nbsp;`;</pre>
+        <pre>};</pre>
+      </code>
+      <p>简单的处理一下就好了，这里不用很麻烦</p>
+      <code>
+        <pre>module</pre>
+        <pre>&nbsp;&nbsp;rules: [</pre>
+        <pre>&nbsp;&nbsp;&nbsp;&nbsp;{</pre>
+        <pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;test: /\.mtmp$/,</pre>
+        <pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use: ['./loader'],</pre>
+        <pre>&nbsp;&nbsp;&nbsp;&nbsp;},</pre>
+        <pre>&nbsp;&nbsp;],</pre>
+        <pre>},</pre>
+      </code>
+      <h3>2. 设计一个 Banner</h3>
+      <p>
+        可以打开开发者工具，cm-banner 就是一个封装的组件，用这个组件需要引入一个 js
+        就可以了。具体代码可以看 github 。
+      </p>
+      <p>
+        大概讲一下原理，CmBanner->mtmp->CmImage->mtmp->img，在 CmBanner 里，通过渲染 cm-banner.mtmp
+        文件，然后再通过 shadowDom 的机制去渲染到页面里。cm-banner.mtmp 中用到了
+        cm-image，所以需要构建 CmImage ，然后 CmImage 内嵌 img 来渲染图片。数据的话是通过 cm-banner
+        的 url 传递到 cm-image 的 url 上，然后 url 在流到 img 上，以形成最终的结果。
+      </p>
+    </article>
+  </body>
 </html>

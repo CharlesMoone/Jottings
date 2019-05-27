@@ -1,1 +1,20 @@
-<slot name="my-test-text">hello</slot>
+<style>
+  cm-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 300px;
+  }
+  .marquee {
+    transition: opacity 1s cubic-bezier(0.215, 0.610, 0.355, 1);
+    opacity: 0;
+  }
+  .active {
+    opacity: 1;
+  }
+</style>
+<cm-image class="marquee active"></cm-image>
+<cm-image class="marquee"></cm-image>
+<cm-image class="marquee"></cm-image>
