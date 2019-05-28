@@ -1,3 +1,28 @@
-dist
-
+# Node
 node_modules
+
+# 包管理器
+npm-debug.log
+yarn-error.log
+
+# OSX
+.DS_Store
+
+# Releases
+*.tgz
+
+# 代码编辑器
+# VSCode
+.vscode
+# JetBrains Intellij
+.idea
+# Vim
+.swp
+# Emacs
+*~
+
+# 生成项
+cache
+dist
+dist.map
+bundle-analyzer-report.html

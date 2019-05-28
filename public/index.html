@@ -1,16 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Blog</title>
-    <link rel="stylesheet" href="css/reset.css" />
-    <link rel="stylesheet" href="css/main.css" />
-    <script async src="js/index.bundle.mjs" type="module"></script>
+    <title>charlesmoone's blog</title>
   </head>
   <body>
-    <cm-banner url="img/banner" wrapped></cm-banner>
+    <cm-banner url="images/banner" wrapped></cm-banner>
     <article>
       <h1>WebComponet 原生模块化初体验</h1>
       <p>Author: meng5994197@gmail.com</p>
@@ -84,7 +79,7 @@
         <pre>module.exports = function(source) {</pre>
         <pre>&nbsp;&nbsp;return `</pre>
         <pre>&nbsp;&nbsp;&nbsp;&nbsp;const template = document.createElement('template');</pre>
-        <pre>&nbsp;&nbsp;&nbsp;&nbsp;template.innerHTML = \`${source}\`;</pre>
+        <pre>&nbsp;&nbsp;&nbsp;&nbsp;template.innerHTML = \`${decodeURIComponent('%24')}{source}\`;</pre>
         <pre>&nbsp;&nbsp;&nbsp;&nbsp;export default template;</pre>
         <pre>&nbsp;&nbsp;`;</pre>
         <pre>};</pre>
@@ -94,7 +89,7 @@
         <pre>module</pre>
         <pre>&nbsp;&nbsp;rules: [</pre>
         <pre>&nbsp;&nbsp;&nbsp;&nbsp;{</pre>
-        <pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;test: /\.mtmp$/,</pre>
+        <pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;test: /\.mtmp${decodeURIComponent('%24')}/,</pre>
         <pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use: ['./loader'],</pre>
         <pre>&nbsp;&nbsp;&nbsp;&nbsp;},</pre>
         <pre>&nbsp;&nbsp;],</pre>

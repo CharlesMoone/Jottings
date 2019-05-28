@@ -1,0 +1,15 @@
+{
+  "enable": true,
+  "url": "/api/auth",
+  "unauthorized": 401,
+  "redirect": {
+    "enable": true,
+    "rule": 401,
+    "url": "/login"
+  },
+  "fetch": {
+    "enable": false,
+    "rule": 401,
+    "url": "/login"
+  }
+}

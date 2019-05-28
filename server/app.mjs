@@ -9,47 +9,34 @@ http
   .createServer({}, async (req, res) => {
     const { pathname, ...info } = url.parse(req.url);
 
-    if (pathname === '/') {
-      const indexHTML = await readFile('./index.html');
-      res.writeHead(200, { 'Content-Type': 'text/html' });
-      res.end(indexHTML, 'utf-8');
-    } else if (/\.css$/.test(pathname)) {
-      try {
-        const css = await readFile(`./public${pathname}`);
-        res.writeHead(200, { 'Content-Type': 'text/css' });
-        res.end(css);
-      } catch (err) {
-        console.error(err);
-        res.statusCode = 404;
-        res.end(null);
+    try {
+      const path = pathname.startsWith('/') ? pathname.slice(1) : pathname;
+      let resbody;
+      if (path === '') {
+        resbody = await readFile('./dist/index.html');
+        res.setHeader('Content-Type', 'text/html');
+      } else if (/\.css$/.test(path)) {
+        resbody = await readFile(`./dist/${path}`);
+        res.setHeader('Content-Type', 'text/css');
+      } else if (/\.(mjs|js)$/.test(path)) {
+        resbody = await readFile(`./dist/${path}`);
+        res.setHeader('Content-Type', 'text/javascript');
+      } else if (/\.png$/.test(path)) {
+        resbody = await readFile(`./dist/${path}`);
+        res.setHeader('Content-Type', 'image/png');
+      } else if (/\.ico$/.test(path)) {
+        resbody = await readFile(`./dist/${path}`);
+        res.setHeader('Content-Type', 'image/x-icon');
+      } else if (/^api/.test(path)) {
+        res.setHeader('Content-Type', 'application/json');
+        resbody = JSON.stringify(['/sys']);
       }
-    } else if (/\.mjs$/.test(pathname)) {
-      const js = await readFile(`./dist${pathname}`);
-      res.writeHead(200, { 'Content-Type': 'text/javascript' });
-      res.end(js, 'utf-8');
-    } else if (/\.png$/.test(pathname)) {
-      try {
-        const png = await readFile(`./public${pathname}`);
-        res.writeHead(200, { 'Content-Type': 'image/png' });
-        res.end(png);
-      } catch (err) {
-        console.error(err);
-        res.statusCode = 404;
-        res.end(null);
-      }
-    } else if (/\.ico$/.test(pathname)) {
-      try {
-        const ico = await readFile(`./dist${pathname}`);
-        res.writeHead(200, { 'Content-Type': 'image/x-icon' });
-        res.end(ico, 'utf-8');
-      } catch (err) {
-        console.error(err);
-        res.statusCode = 404;
-        res.end(null);
-      }
-    } else {
-      res.statusCode = 404;
+      res.statusCode = 200;
+      res.end(resbody);
+    } catch (err) {
+      console.error(err);
+      res.statusCode = err.code || 404;
       res.end(null);
     }
   })
-  .listen(9999, '0.0.0.0');
+  .listen(8888, '0.0.0.0');

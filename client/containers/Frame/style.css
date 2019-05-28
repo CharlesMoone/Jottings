@@ -1,0 +1,31 @@
+.page {
+  display: flex;
+  flex-flow: column nowrap;
+  min-height: 100vh;
+}
+.content {
+  display: flex;
+  flex: 1;
+  background-color: #f0f2f5;
+}
+.header {
+  display: flex;
+  align-items: center;
+}
+.logo {
+  display: inline-flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+}
+.logo > a:focus {
+  text-decoration: none;
+}
+.logo > a > img {
+  width: 48px;
+  height: 48px;
+}
+.logo > a > span {
+  color: aliceblue;
+  padding-right: 20px;
+}
