@@ -13,15 +13,34 @@ module.exports = merge(common, {
   output: {
     // Generate SourceMap File Out of '/dist/'
     sourceMapFilename: '../dist.map/[file].map',
-    publicPath: `${process.env.BUILD_PUBLIC_PATH}${process.env.BUILD_PUBLIC_PATH.endsWith('/') ? '' : '/'}`,
+    publicPath: `${process.env.BUILD_PUBLIC_PATH}${
+      process.env.BUILD_PUBLIC_PATH.endsWith('/') ? '' : '/'
+    }`,
   },
   plugins: [
     new AddAssetHtmlPlugin({
-      filepath: path.join(__dirname, 'public/css/*.css'),
+      filepath: path.join(__dirname, 'public/css/common.css'),
+      files: 'sys.html',
       hash: true,
       typeOfAsset: 'css',
       outputPath: 'css',
-      publicPath: path.join(process.env.BUILD_PUBLIC_PATH, 'css'),
+      publicPath: '/css',
+    }),
+    new AddAssetHtmlPlugin({
+      filepath: path.join(__dirname, 'public/css/main.css'),
+      files: 'index.html',
+      hash: true,
+      typeOfAsset: 'css',
+      outputPath: 'css',
+      publicPath: '/css',
+    }),
+    new AddAssetHtmlPlugin({
+      filepath: path.join(__dirname, 'public/css/reset.css'),
+      files: 'index.html',
+      hash: true,
+      typeOfAsset: 'css',
+      outputPath: 'css',
+      publicPath: '/css',
     }),
     new CleanWebpackPlugin({
       cleanOnceBeforeBuildPatterns: [
@@ -30,12 +49,14 @@ module.exports = merge(common, {
         path.join(__dirname, 'bundle-analyzer-report.html'),
       ],
     }),
-    new CopyWebpackPlugin([{
-      from: path.join(__dirname, 'public'),
-      to: path.join(__dirname, 'dist/'),
-      force: true,
-      ignore: ['index.html', 'css/**/*'],
-    }]),
+    new CopyWebpackPlugin([
+      {
+        from: path.join(__dirname, 'public'),
+        to: path.join(__dirname, 'dist/'),
+        force: true,
+        ignore: ['*.html', 'css/**/*'],
+      },
+    ]),
     new BundleAnalyzerPlugin({
       analyzerMode: 'static',
       reportFilename: path.join(__dirname, 'bundle-analyzer-report.html'),

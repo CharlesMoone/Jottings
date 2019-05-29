@@ -101,14 +101,6 @@ module.exports = merge(common, {
       publicPath: '/css',
     }),
     new AddAssetHtmlPlugin({
-      filepath: path.join(__dirname, 'public/css/common.css'),
-      files: 'sys.html',
-      hash: true,
-      typeOfAsset: 'css',
-      outputPath: 'css',
-      publicPath: '/css',
-    }),
-    new AddAssetHtmlPlugin({
       filepath: path.join(__dirname, 'public/css/main.css'),
       files: 'index.html',
       hash: true,

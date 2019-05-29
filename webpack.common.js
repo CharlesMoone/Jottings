@@ -63,6 +63,7 @@ module.exports = {
       meta: {
         viewport: 'width=device-width, initial-scale=1',
       },
+      inject: 'head',
       hash: true,
       chunks: ['banner'],
     }),
