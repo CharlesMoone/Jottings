@@ -4,12 +4,14 @@
   "unauthorized": 401,
   "redirect": {
     "enable": true,
-    "rule": 401,
-    "url": "/login"
+    "rules": {
+      "401": "/login"
+    }
   },
   "fetch": {
     "enable": false,
-    "rule": 401,
-    "url": "/login"
+    "rules": {
+      "401": "/login"
+    }
   }
 }

@@ -151,17 +151,19 @@ export class AuthProvider extends React.PureComponent {
       const { redirect } = AuthConfig;
       try {
         const response = await fetch(AuthConfig.url);
-        if (redirect.enable && (
-          Number(response.status) === Number(redirect.rule) ||
-          (redirect.rule === 'always' && Number(response.status) >= 300)
-        )) {
-          return this.setState({ redirect: redirect.url });
+        if (redirect.enable) {
+          if (redirect.rules[response.status]) {
+            return this.setState({ redirect: redirect.rules[response.status] });
+          }
+          if (redirect.rules.always && Number(response.status) >= 300) {
+            return this.setState({ redirect: redirect.rules.always });
+          }
         }
         const authList = await response.json();
         this.setState({ loading: false, authList }, () => resolve(authList));
       } catch(e) {
-        if (redirect.enable && redirect.rule === 'always') {
-          return this.setState({ redirect: redirect.url });
+        if (redirect.enable && redirect.rules.always) {
+          return this.setState({ redirect: redirect.rules.always });
         }
         this.setState({ loading: false, authList: [] }, () => resolve([]));
         console.error('权限列表加载失败！', e);

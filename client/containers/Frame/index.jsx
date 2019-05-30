@@ -13,6 +13,7 @@ import style from './style';
 
 const { SubMenu } = Menu;
 const { Header, Sider, Content } = Layout;
+const PageArticle = loadable.withLoading(() => import('../Article'));
 
 export default class extends React.PureComponent {
   constructor(props) {
@@ -58,7 +59,22 @@ export default class extends React.PureComponent {
         defaultOpenKeys={keys}
         selectedKeys={[keys.pop()]}
         style={{ height: '100%', borderRight: 0 }}
-      />
+      >
+        <SubMenu
+          key="article"
+          data-becu-auth="article"
+          title={
+            <>
+              <Icon type="deployment-unit" />
+              <span>文章</span>
+            </>
+          }
+        >
+          <Menu.Item key="list" data-becu-auth="article/list">
+            <Link to="/article/list">列表</Link>
+          </Menu.Item>
+        </SubMenu>
+      </Menu>
     );
   }
   render() {
@@ -96,7 +112,7 @@ export default class extends React.PureComponent {
               />
             </Popover>
             <div className={style.logo}>
-              <Link to="/sys">
+              <Link to="/">
                 <img src={`${__webpack_public_path__}images/BECULOGO.png`} />
                 <span>BECU</span>
               </Link>
@@ -118,6 +134,7 @@ export default class extends React.PureComponent {
               style={{ width: `calc(100% - ${menuWidth}px)` }}
             >
               <Switch>
+                <Route path="/article" component={PageArticle} />
                 <Route
                   render={() => (
                     <Alert

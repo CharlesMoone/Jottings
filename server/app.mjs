@@ -15,6 +15,9 @@ http
       if (path === '') {
         resbody = await readFile('./dist/index.html');
         res.setHeader('Content-Type', 'text/html');
+      } else if (path === 'sys') {
+        resbody = await readFile('./dist/sys.html');
+        res.setHeader('Content-Type', 'text/html');
       } else if (/\.css$/.test(path)) {
         resbody = await readFile(`./dist/${path}`);
         res.setHeader('Content-Type', 'text/css');
@@ -27,9 +30,17 @@ http
       } else if (/\.ico$/.test(path)) {
         resbody = await readFile(`./dist/${path}`);
         res.setHeader('Content-Type', 'image/x-icon');
-      } else if (/^api/.test(path)) {
+      } else if (/^api\/auth/.test(path)) {
+        /**
+         * handle /api/auth
+         * 
+         * @returns String[]
+         * @author charlesmoone
+         **/
         res.setHeader('Content-Type', 'application/json');
-        resbody = JSON.stringify(['/sys']);
+        resbody = JSON.stringify(['article/list']);
+      } else {
+        throw { code: 404, msg: 'resource not found' };
       }
       res.statusCode = 200;
       res.end(resbody);

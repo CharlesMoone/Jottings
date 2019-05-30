@@ -16,9 +16,9 @@ loadable.withLoading = (loadFn, options) => loadable(loadFn, {
 const PageFrame = loadable.withLoading(() => import('./containers/Frame'));
 
 ReactDOM.render(
-  <Router>
+  <Router basename="/sys">
     <Switch>
-      <Route path="/sys" component={PageFrame} />
+      <Route path="/" component={PageFrame} />
     </Switch>
   </Router>,
   document.getElementById('root'),

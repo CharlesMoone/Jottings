@@ -66,7 +66,7 @@ module.exports = {
       chunks: ['banner'],
     }),
     new ScriptExtHtmlWebpackPlugin({
-      defaultAttribute: 'async',
+      async: 'banner',
       module: 'banner',
     }),
   ],
