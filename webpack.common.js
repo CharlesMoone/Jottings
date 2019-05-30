@@ -1,15 +1,13 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 
 require('dotenv').config();
 
 const babelLoader = {
   loader: 'babel-loader',
   options: {
-    presets: [
-      ['@babel/preset-env', { targets: '> 2.486%, not dead' }],
-      '@babel/preset-react',
-    ],
+    presets: [['@babel/preset-env', { targets: '> 2.486%, not dead' }], '@babel/preset-react'],
     plugins: [
       ['@babel/plugin-syntax-dynamic-import'],
       ['@babel/plugin-proposal-class-properties'],
@@ -30,8 +28,8 @@ const cssLoader = {
   options: {
     modules: true,
     importLoaders: 1,
-    localIdentName: '[local]-[name]-[hash:base64:5]'
-  }
+    localIdentName: '[local]-[name]-[hash:base64:5]',
+  },
 };
 
 const lessLoader = {
@@ -66,6 +64,10 @@ module.exports = {
       inject: 'head',
       hash: true,
       chunks: ['banner'],
+    }),
+    new ScriptExtHtmlWebpackPlugin({
+      defaultAttribute: 'async',
+      module: 'banner',
     }),
   ],
   resolve: {
