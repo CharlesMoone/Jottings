@@ -1,25 +1,43 @@
 import React, { Component } from 'react';
 import { Button } from 'antd';
 import classnames from 'classnames';
-import { Editor, EditorState, RichUtils } from 'draft-js';
+import { Editor, EditorState, RichUtils, convertToRaw } from 'draft-js';
 import 'draft-js/dist/Draft.css';
+import { stateToHTML } from 'draft-js-export-html';
+import { stateFromHTML } from 'draft-js-import-html';
 
 import style from './style.css';
 import BlockStyleControls from './components/BlockStyleControls';
 import InlineStyleControls from './components/InlineStyleControls';
 
 export default class extends Component {
+  get editorState() {
+    return this.props.editorState || EditorState.createEmpty();
+  }
+
+  get placeholder() {
+    return this.props.placeholder || "Start a jotting...";
+  }
+
   constructor(props) {
     super(props);
 
     this.state = {
       maxDepth: 4,
-      editorState: EditorState.createEmpty(),
+      editorState: this.editorState,
     };
   }
 
   componentDidMount() {
     this.focusEditor();
+
+    setTimeout(() => {
+      this.setState({
+        editorState: EditorState.createWithContent(
+          stateFromHTML(decodeURIComponent('%3Cp%3Efdsafdsafsdfd%3C%2Fp%3E')),
+        ),
+      });
+    }, 3000);
   }
 
   onChange = editorState => this.setState({ editorState });
@@ -52,7 +70,7 @@ export default class extends Component {
   }
 
   _toggleInlineStyle(inlineStyle) {
-    this.onChange(RichUtils.toggleBlockType(this.state.editorState, inlineStyle));
+    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, inlineStyle));
   }
 
   _styleMap = {
@@ -71,6 +89,12 @@ export default class extends Component {
       default:
         return null;
     }
+  }
+
+  submitOnClick(contentState) {
+    const row = stateToHTML(contentState);
+
+    console.log(encodeURIComponent(row));
   }
 
   render() {
@@ -98,14 +122,13 @@ export default class extends Component {
             customStyleMap={this._styleMap}
             editorState={this.state.editorState}
             handleKeyCommand={this.handleKeyCommand}
-            placeholder="Tell a story..."
+            placeholder={this.placeholder}
             onChange={this.onChange}
             onTab={this.onTab}
-            spellCheck={true}
           />
         </div>
       </div>,
-      <Button key="submit" onClick={() => console.log(editorState.getCurrentContent())}>
+      <Button key="submit" onClick={() => this.submitOnClick(contentState)}>
         提交
       </Button>,
     ];
