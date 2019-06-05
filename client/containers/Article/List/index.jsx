@@ -33,7 +33,7 @@ export default class extends React.PureComponent {
   render() {
     return this.renderLayout(
       <div className="becu-items">
-        <EditArea data-route={this.routeVariable} />
+        <EditArea data-route={this.routeVariable} decodeState={false} editorState={"<p>hello</p><p><br></p><pre><code>123123</code></pre>"} />
       </div>
     );
   }

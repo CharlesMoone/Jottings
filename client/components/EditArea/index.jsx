@@ -1,22 +1,44 @@
 import React, { Component } from 'react';
-import { Button } from 'antd';
+import { Button, Spin, message } from 'antd';
 import classnames from 'classnames';
 import { Editor, EditorState, RichUtils, convertToRaw } from 'draft-js';
 import 'draft-js/dist/Draft.css';
 import { stateToHTML } from 'draft-js-export-html';
 import { stateFromHTML } from 'draft-js-import-html';
+import PluginFetch from '@becu/plugin-fetch';
 
 import style from './style.css';
 import BlockStyleControls from './components/BlockStyleControls';
 import InlineStyleControls from './components/InlineStyleControls';
 
 export default class extends Component {
+  get decodeState() {
+    return this.props.decodeState || false;
+  }
+
   get editorState() {
-    return this.props.editorState || EditorState.createEmpty();
+    return EditorState.createWithContent(
+      stateFromHTML(this.decodeState ? decodeURIComponent(this.props.editorState || '') : this.props.editorState || '')
+    );
   }
 
   get placeholder() {
-    return this.props.placeholder || "Start a jotting...";
+    return this.props.placeholder || 'Start a jotting...';
+  }
+
+  get PluginFetch() {
+    return Object.prototype.hasOwnProperty.call(this.props, 'PluginFetch') ? this.props.PluginFetch : PluginFetch;
+  }
+
+  get FetchOptions() {
+    return Object.prototype.hasOwnProperty.call(this.props, 'FetchOptions')
+      ? this.props.FetchOptions
+      : {
+          url: '/api/article',
+          method: 'POST',
+          fetchType: 'json',
+          ...(this.props.FetchOptions || {}),
+        };
   }
 
   constructor(props) {
@@ -24,20 +46,19 @@ export default class extends Component {
 
     this.state = {
       maxDepth: 4,
+      loading: false,
       editorState: this.editorState,
     };
   }
 
   componentDidMount() {
-    this.focusEditor();
-
-    setTimeout(() => {
-      this.setState({
-        editorState: EditorState.createWithContent(
-          stateFromHTML(decodeURIComponent('%3Cp%3Efdsafdsafsdfd%3C%2Fp%3E')),
-        ),
-      });
-    }, 3000);
+    if (this.PluginFetch) {
+      try {
+        this.fetcher = new this.PluginFetch(this.FetchOptions);
+      } catch (err) {
+        message.error('初始化请求插件失败!');
+      }
+    }
   }
 
   onChange = editorState => this.setState({ editorState });
@@ -75,7 +96,7 @@ export default class extends Component {
 
   _styleMap = {
     CODE: {
-      backgroundColor: 'rgba(0, 0, 0, 0.05)',
+      backgroundColor: 'rgba(242, 242, 242, 1)',
       fontFamily: '"Inconsolata", "Menlo", "Consolas", monospace',
       fontSize: 16,
       padding: 2,
@@ -91,14 +112,37 @@ export default class extends Component {
     }
   }
 
+  saveArticle(content = '') {
+    if (this.PluginFetch) {
+      this.setState({ loading: true }, async () => {
+        try {
+          const { msg = null, code = 1 } = (await this.fetcher.main({
+            data: { content },
+          })) || { msg: null, code: 1 };
+
+          if (code) message.error(msg || '失败');
+          else {
+            this.saveCallback();
+          }
+        } catch (err) {
+          console.error(err);
+
+          message.error('请求异常!');
+        } finally {
+          this.setState({ loading: false });
+        }
+      });
+    }
+  }
+
   submitOnClick(contentState) {
     const row = stateToHTML(contentState);
 
-    console.log(encodeURIComponent(row));
+    this.saveArticle(encodeURIComponent(row));
   }
 
   render() {
-    const { editorState } = this.state;
+    const { editorState, loading } = this.state;
 
     let className = style.richEditor_editor;
     const contentState = editorState.getCurrentContent();
@@ -112,23 +156,25 @@ export default class extends Component {
       className = classnames(className, style.richEditor_hidePlaceholder);
 
     return [
-      <div key="editor" className={style.richEditor_root}>
-        <BlockStyleControls editorState={editorState} onToggle={this.toggleBlockType} />
-        <InlineStyleControls editorState={editorState} onToggle={this.toggleInlineStyle} />
-        <div className={className} onClick={this.focusEditor}>
-          <Editor
-            ref={this.setEditor}
-            blockStyleFn={this._getBlockStyle}
-            customStyleMap={this._styleMap}
-            editorState={this.state.editorState}
-            handleKeyCommand={this.handleKeyCommand}
-            placeholder={this.placeholder}
-            onChange={this.onChange}
-            onTab={this.onTab}
-          />
+      <Spin key='editor' spinning={loading}>
+        <div className={style.richEditor_root}>
+          <BlockStyleControls editorState={editorState} onToggle={this.toggleBlockType} />
+          <InlineStyleControls editorState={editorState} onToggle={this.toggleInlineStyle} />
+          <div className={className} onClick={this.focusEditor}>
+            <Editor
+              ref={this.setEditor}
+              blockStyleFn={this._getBlockStyle}
+              customStyleMap={this._styleMap}
+              editorState={editorState}
+              handleKeyCommand={this.handleKeyCommand}
+              placeholder={this.placeholder}
+              onChange={this.onChange}
+              onTab={this.onTab}
+            />
+          </div>
         </div>
-      </div>,
-      <Button key="submit" onClick={() => this.submitOnClick(contentState)}>
+      </Spin>,
+      <Button key='submit' onClick={() => this.submitOnClick(contentState)}>
         提交
       </Button>,
     ];
