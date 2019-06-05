@@ -1,0 +1,21 @@
+package: '@becu/form'
+name: AddArticle
+config:
+  layout: horizontal
+  fields:
+    - label: 文章名称
+      name: article
+      hasFeedback: true
+      mode: default
+    - label: 作者
+      name: author
+      hasFeedback: true
+      mode: default
+    - label: 文章描述
+      name: description
+      hasFeedback: true
+      mode: default
+    - label: 图片
+      name: photo
+      type: file
+  ignoreUnchanged: true

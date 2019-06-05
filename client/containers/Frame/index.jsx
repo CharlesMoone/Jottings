@@ -73,6 +73,9 @@ export default class extends React.PureComponent {
           <Menu.Item key="list" data-becu-auth="article/list">
             <Link to="/article/list">列表</Link>
           </Menu.Item>
+          <Menu.Item key="add" data-becu-auth="article/add">
+            <Link to="/article/add">写文章</Link>
+          </Menu.Item>
         </SubMenu>
       </Menu>
     );

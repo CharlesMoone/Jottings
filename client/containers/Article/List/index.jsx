@@ -1,19 +1,14 @@
 import React from 'react';
 import { Breadcrumb } from 'antd';
-import EditArea from '../../../components/EditArea';
 
 export default class extends React.PureComponent {
   get routeVariable() {
-    const { location: { search = '' } = {}, match: { params = {} } = {} } =
-      this.props || {};
+    const { location: { search = '' } = {}, match: { params = {} } = {} } = this.props || {};
     const query = search
-      ? Array.from(new URLSearchParams(search.replace(/^\?/, ''))).reduce(
-          (obj, [key, value]) => {
-            obj[key] = value;
-            return obj;
-          },
-          {}
-        )
+      ? Array.from(new URLSearchParams(search.replace(/^\?/, ''))).reduce((obj, [key, value]) => {
+          obj[key] = value;
+          return obj;
+        }, {})
       : {};
     return { params, query };
   }
@@ -31,10 +26,6 @@ export default class extends React.PureComponent {
   }
 
   render() {
-    return this.renderLayout(
-      <div className="becu-items">
-        <EditArea data-route={this.routeVariable} decodeState={false} editorState={"<p>hello</p><p><br></p><pre><code>123123</code></pre>"} />
-      </div>
-    );
+    return this.renderLayout();
   }
 }
