@@ -22,8 +22,8 @@ export default class extends React.PureComponent {
     return (
       <>
         <Breadcrumb className="becu-bread-crumb">
-          <Breadcrumb.Item>文章</Breadcrumb.Item>
-          <Breadcrumb.Item>写文章</Breadcrumb.Item>
+          <Breadcrumb.Item>article</Breadcrumb.Item>
+          <Breadcrumb.Item>new</Breadcrumb.Item>
         </Breadcrumb>
         {React.createElement('div', { className: 'becu-component' }, ...args)}
       </>

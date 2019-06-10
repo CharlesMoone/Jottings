@@ -26,3 +26,6 @@ cache
 dist
 dist.map
 bundle-analyzer-report.html
+
+# special ignore
+server/utils/keys.mjs

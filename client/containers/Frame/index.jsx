@@ -66,15 +66,15 @@ export default class extends React.PureComponent {
           title={
             <>
               <Icon type="deployment-unit" />
-              <span>文章</span>
+              <span>article</span>
             </>
           }
         >
           <Menu.Item key="list" data-becu-auth="article/list">
-            <Link to="/article/list">列表</Link>
+            <Link to="/article/list">list</Link>
           </Menu.Item>
           <Menu.Item key="add" data-becu-auth="article/add">
-            <Link to="/article/add">写文章</Link>
+            <Link to="/article/add">new</Link>
           </Menu.Item>
         </SubMenu>
       </Menu>
@@ -144,7 +144,7 @@ export default class extends React.PureComponent {
                       message="Hello World!"
                       type="success"
                       showIcon
-                      description="欢迎来到 Becu"
+                      description="welcome to Becu"
                     />
                   )}
                 />

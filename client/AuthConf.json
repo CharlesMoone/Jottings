@@ -5,7 +5,9 @@
   "redirect": {
     "enable": true,
     "rules": {
-      "401": "/login"
+      "401": "/login",
+      "404": "/404",
+      "504": "/404"
     }
   },
   "fetch": {
