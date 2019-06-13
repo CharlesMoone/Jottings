@@ -26,7 +26,7 @@ export default class extends BecuForm {
           hasFeedback: true,
           mode: 'default',
         },
-        { label: 'image of the article:', name: 'photo', type: 'file' },
+        { label: 'image of the article:', name: 'image', type: 'file' },
       ]
     );
   }
@@ -35,7 +35,7 @@ export default class extends BecuForm {
     return this.props.FetchOptions || {
       url: '/api/article',
       method: 'POST',
-      fetchType: 'json',
+      fetchType: 'multipart',
     };
   }
 

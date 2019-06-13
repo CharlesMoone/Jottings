@@ -10,7 +10,7 @@ import authRouter from './router/authRouter.mjs';
 import articleRouter from './router/articleRouter.mjs';
 import errorRouter from './router/errorRouter.mjs';
 
-mongoose.connect('mongodb://localhost:27017/jottings', { useNewUrlParser: true, useCreateIndex: true })
+mongoose.connect('mongodb://localhost:27017/jottings', { useNewUrlParser: true, useCreateIndex: true });
 
 const app = new Koa();
 

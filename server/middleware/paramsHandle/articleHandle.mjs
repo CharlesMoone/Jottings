@@ -1,6 +1,6 @@
 const articleHandle = {
   GET: ['title'],
-  POST: ['title', 'content'],
+  POST: ['title', 'author', 'description', 'content'],
 };
 
 /**
@@ -23,5 +23,5 @@ export default (ctx, next) => {
 
   ctx.handleParams = handleParams;
 
-  next();
+  return next();
 }

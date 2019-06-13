@@ -42,7 +42,7 @@ const lessLoader = {
 module.exports = {
   entry: {
     index: path.join(__dirname, 'client/index.jsx'),
-    banner: path.join(__dirname, 'webcomponent/js/banner.mjs'),
+    banner: path.join(__dirname, 'webcomponent/cm-banner/index.mjs'),
   },
   plugins: [
     new HtmlWebpackPlugin({

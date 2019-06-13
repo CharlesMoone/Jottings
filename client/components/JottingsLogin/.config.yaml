@@ -1,0 +1,9 @@
+name: JottingsLogin
+config:
+  extraFormProps:
+    FetchOptions:
+      url: /api/login
+      method: POST
+    logoTitle: welcome to system
+    showRegister: false
+    replacePath: /sys

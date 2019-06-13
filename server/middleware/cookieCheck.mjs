@@ -8,7 +8,8 @@ export default async (ctx, next) => {
   try {
     const result = await AuthModel.findOne({ _id: uuid });
     if (result.authlist.includes(ctx.path.slice(1))) {
-      next();
+      ctx.authinfo = result;
+      return next();
     } else {
       [ctx.status, ctx.body] = codeMsg.COOKIEERROR;
     }
