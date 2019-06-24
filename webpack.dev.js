@@ -3,6 +3,7 @@ const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const glob = require('glob');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 const common = require('./webpack.common.js');
 
@@ -92,30 +93,14 @@ module.exports = merge(common, {
       filepath: path.join(__dirname, 'cache/*.dll.js'),
       hash: true,
     }),
-    new AddAssetHtmlPlugin({
-      filepath: path.join(__dirname, 'public/css/common.css'),
-      files: 'sys.html',
-      hash: true,
-      typeOfAsset: 'css',
-      outputPath: 'css',
-      publicPath: '/css',
-    }),
-    new AddAssetHtmlPlugin({
-      filepath: path.join(__dirname, 'public/css/main.css'),
-      files: 'index.html',
-      hash: true,
-      typeOfAsset: 'css',
-      outputPath: 'css',
-      publicPath: '/css',
-    }),
-    new AddAssetHtmlPlugin({
-      filepath: path.join(__dirname, 'public/css/reset.css'),
-      files: 'index.html',
-      hash: true,
-      typeOfAsset: 'css',
-      outputPath: 'css',
-      publicPath: '/css',
-    }),
+    new CopyWebpackPlugin([
+      {
+        from: path.join(__dirname, 'public'),
+        to: path.join(__dirname, 'dist/'),
+        force: true,
+        ignore: ['*.html', 'css/**/*'],
+      },
+    ]),
     new webpack.HotModuleReplacementPlugin(),
   ],
   watchOptions: {

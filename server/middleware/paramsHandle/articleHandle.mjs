@@ -1,6 +1,7 @@
 const articleHandle = {
-  GET: ['title'],
+  GET: ['page', 'pageSize', 'sort', 'sortBy'],
   POST: ['title', 'author', 'description', 'content'],
+  PATCH: ['title', 'author', 'description', 'content'],
 };
 
 /**

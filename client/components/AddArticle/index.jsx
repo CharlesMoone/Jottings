@@ -1,9 +1,10 @@
 import React from 'react';
 import BecuForm from '@becu/form';
-import BecuEditor from '@becu/editor';
 import { Button } from 'antd';
+import Editor from '../Editor';
 
 import style from './style.css';
+import 'react-quill/dist/quill.snow.css';
 
 export default class extends BecuForm {
   get layout() {
@@ -48,7 +49,7 @@ export default class extends BecuForm {
   preSubmit(value) {
     super.preSubmit(value);
 
-    value.content = this.editorRef.current.getContentState();
+    value.content = this.editorRef.current.getContent();
 
     return value;
   }
@@ -61,7 +62,7 @@ export default class extends BecuForm {
     return (
       <>
         {super.render()}
-        <BecuEditor ref={this.editorRef} decodeState={true} editorState={''} />
+        <Editor ref={this.editorRef} decodeContent={true} />
         <Button className={style.submitButton} onClick={this.writeArticle.bind(this)}>Submit</Button>
       </>
     );

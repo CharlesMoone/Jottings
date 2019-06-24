@@ -11,7 +11,7 @@
     }
   },
   "fetch": {
-    "enable": false,
+    "enable": true,
     "rules": {
       "401": "/login"
     }

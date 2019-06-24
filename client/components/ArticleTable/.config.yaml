@@ -1,0 +1,43 @@
+package: '@becu/table'
+name: ArticleTable
+config:
+  FetchOptions:
+    url: /api/article
+    credentials: include
+  editFetchOptions:
+    url: /api/article/:_id
+  deleteFetchOptions:
+    url: /api/article/:_id
+  columns:
+    - title: image
+      dataIndex: image
+    - title: article title
+      dataIndex: title
+    - title: author
+      dataIndex: author
+    - title: description
+      dataIndex: description
+    - title: 操作
+      dataIndex: Operation
+      render:
+        - $$Edit$$
+        - $$Delete$$
+  rowKey: _id
+  pagination:
+    showQuickJumper: true
+  editFields:
+    - label: image
+      name: image
+      type: file
+    - label: article title
+      name: title
+      type: string
+    - label: author
+      name: author
+      type: string
+    - label: description
+      name: description
+      type: string
+    - label: content
+      name: content
+      type: string

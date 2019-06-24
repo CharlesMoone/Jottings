@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 
 require('dotenv').config();
@@ -43,6 +44,8 @@ module.exports = {
   entry: {
     index: path.join(__dirname, 'client/index.jsx'),
     banner: path.join(__dirname, 'webcomponent/cm-banner/index.mjs'),
+    article: path.join(__dirname, 'webcomponent/cm-article/index.mjs'),
+    content: path.join(__dirname, 'webcomponent/cm-content/index.mjs'),
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -56,6 +59,26 @@ module.exports = {
       chunks: ['index'],
     }),
     new HtmlWebpackPlugin({
+      filename: 'article.html',
+      template: path.join(__dirname, 'public/article.html'),
+      meta: {
+        viewport: 'width=device-width, initial-scale=1',
+      },
+      inject: 'head',
+      hash: true,
+      chunks: ['article'],
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'content.html',
+      template: path.join(__dirname, 'public/content.html'),
+      meta: {
+        viewport: 'width=device-width, initial-scale=1',
+      },
+      inject: 'head',
+      hash: true,
+      chunks: ['content'],
+    }),
+    new HtmlWebpackPlugin({
       filename: 'index.html',
       template: path.join(__dirname, 'public/index.html'),
       meta: {
@@ -66,8 +89,32 @@ module.exports = {
       chunks: ['banner'],
     }),
     new ScriptExtHtmlWebpackPlugin({
-      async: 'banner',
-      module: 'banner',
+      async: ['banner', 'article', 'content'],
+      module: ['banner', 'article', 'content'],
+    }),
+    new AddAssetHtmlPlugin({
+      filepath: path.join(__dirname, 'public/css/common.css'),
+      files: 'sys.html',
+      hash: true,
+      typeOfAsset: 'css',
+      outputPath: 'css',
+      publicPath: '/css',
+    }),
+    new AddAssetHtmlPlugin({
+      filepath: path.join(__dirname, 'public/css/main.css'),
+      files: ['index.html', 'article.html', 'content.html'],
+      hash: true,
+      typeOfAsset: 'css',
+      outputPath: 'css',
+      publicPath: '/css',
+    }),
+    new AddAssetHtmlPlugin({
+      filepath: path.join(__dirname, 'public/css/reset.css'),
+      files: ['index.html', 'article.html', 'content.html'],
+      hash: true,
+      typeOfAsset: 'css',
+      outputPath: 'css',
+      publicPath: '/css',
     }),
   ],
   resolve: {

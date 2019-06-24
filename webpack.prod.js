@@ -18,30 +18,6 @@ module.exports = merge(common, {
     }`,
   },
   plugins: [
-    new AddAssetHtmlPlugin({
-      filepath: path.join(__dirname, 'public/css/common.css'),
-      files: 'sys.html',
-      hash: true,
-      typeOfAsset: 'css',
-      outputPath: 'css',
-      publicPath: '/css',
-    }),
-    new AddAssetHtmlPlugin({
-      filepath: path.join(__dirname, 'public/css/main.css'),
-      files: 'index.html',
-      hash: true,
-      typeOfAsset: 'css',
-      outputPath: 'css',
-      publicPath: '/css',
-    }),
-    new AddAssetHtmlPlugin({
-      filepath: path.join(__dirname, 'public/css/reset.css'),
-      files: 'index.html',
-      hash: true,
-      typeOfAsset: 'css',
-      outputPath: 'css',
-      publicPath: '/css',
-    }),
     new CleanWebpackPlugin({
       cleanOnceBeforeBuildPatterns: [
         path.join(__dirname, 'dist/*'),
@@ -57,10 +33,10 @@ module.exports = merge(common, {
         ignore: ['*.html', 'css/**/*'],
       },
     ]),
-    new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
-      reportFilename: path.join(__dirname, 'bundle-analyzer-report.html'),
-    }),
+    // new BundleAnalyzerPlugin({
+    //   analyzerMode: 'static',
+    //   reportFilename: path.join(__dirname, 'bundle-analyzer-report.html'),
+    // }),
   ],
   optimization: {
     splitChunks: {

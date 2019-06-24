@@ -1,5 +1,5 @@
 import cmBanner from './template/cm-banner.mtmp';
-import '../js/image.mjs';
+import './js/image.mjs';
 
 class CmBanner extends HTMLElement {
   get url() {

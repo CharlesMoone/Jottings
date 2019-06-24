@@ -7,13 +7,20 @@ export default async (ctx, next) => {
 
   try {
     const result = await AuthModel.findOne({ _id: uuid });
-    if (result.authlist.includes(ctx.path.slice(1))) {
+    let _path = ctx.path.slice(1);
+    if (ctx.method === 'PATCH' || ctx.method === 'PUT' || ctx.method === 'DELETE') {
+      _path = ctx._matchedRoute.split(':')[0];
+      _path = _path.slice(1, _path.length - 1);
+    }
+    console.log(result.authlist, _path);
+    if (result.authlist.includes(_path)) {
       ctx.authinfo = result;
       return next();
     } else {
       [ctx.status, ctx.body] = codeMsg.COOKIEERROR;
     }
   } catch (error) {
+    console.log(error);
     ctx.throw(401, 'cookie error');
   }
 };
