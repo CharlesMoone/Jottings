@@ -33,10 +33,10 @@ module.exports = merge(common, {
         ignore: ['*.html', 'css/**/*'],
       },
     ]),
-    // new BundleAnalyzerPlugin({
-    //   analyzerMode: 'static',
-    //   reportFilename: path.join(__dirname, 'bundle-analyzer-report.html'),
-    // }),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      reportFilename: path.join(__dirname, 'bundle-analyzer-report.html'),
+    }),
   ],
   optimization: {
     splitChunks: {

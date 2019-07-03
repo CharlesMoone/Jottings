@@ -40,12 +40,60 @@ const lessLoader = {
   },
 };
 
+// 涉及到的 webcomponent 组件
+const webcomponent = ['banner', 'article', 'content'];
+
+/**
+ * 给 target.html 内置 contains 的 mjs
+ * [target, contains]
+ * @param { String } target 要插入 mjs 的 html
+ * @param { StringArray } contains 需要插入到 html 的 mjs 的数组
+ *
+ * @return { HtmlWebpackPluginArray } 实例化 HtmlWebpackPlugin 对象的数组
+ */
+const htmlWebpackPlugin = [
+  ['article', 'article'],
+  ['content', 'content'],
+  ['index', 'banner', 'article'],
+].map(([target, ...contains]) => new HtmlWebpackPlugin({
+  filename: `${target}.html`,
+  template: path.join(__dirname, `public/${target}.html`),
+  meta: {
+    viewport: 'width=device-width, initial-scale=1',
+  },
+  inject: 'head',
+  hash: true,
+  chunks: contains,
+}));
+
+/**
+ * 给 target.html 内置 contains 的 css
+ * [target, contains]
+ * @param { String } target 要插入 css 的 html
+ * @param { StringArray } contains 需要插入到 html 的 css 的数组
+ *
+ * @return { AddAssetHtmlPluginArray } 实例化 AddAssetHtmlPluginArray 对象的数组
+ */
+const addAssetHtmlPlugin = [
+  ['common', 'sys'],
+  ['main', 'index', 'article', 'content'],
+  ['reset', 'index', 'article', 'content'],
+].map(([target, ...contains]) => new AddAssetHtmlPlugin({
+  filepath: path.join(__dirname, `public/css/${target}.css`),
+  files: contains.map(item => `${item}.html`),
+  hash: true,
+  typeOfAsset: 'css',
+  outputPath: 'css',
+  publicPath: '/css',
+}));
+
 module.exports = {
   entry: {
     index: path.join(__dirname, 'client/index.jsx'),
-    banner: path.join(__dirname, 'webcomponent/cm-banner/index.mjs'),
-    article: path.join(__dirname, 'webcomponent/cm-article/index.mjs'),
-    content: path.join(__dirname, 'webcomponent/cm-content/index.mjs'),
+    ...webcomponent.reduce((origin, parent) => ({
+      ...origin,
+      [parent]: path.join(__dirname, `webcomponent/cm-${parent}/index.mjs`),
+    }), {}),
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -58,64 +106,12 @@ module.exports = {
       hash: true,
       chunks: ['index'],
     }),
-    new HtmlWebpackPlugin({
-      filename: 'article.html',
-      template: path.join(__dirname, 'public/article.html'),
-      meta: {
-        viewport: 'width=device-width, initial-scale=1',
-      },
-      inject: 'head',
-      hash: true,
-      chunks: ['article'],
-    }),
-    new HtmlWebpackPlugin({
-      filename: 'content.html',
-      template: path.join(__dirname, 'public/content.html'),
-      meta: {
-        viewport: 'width=device-width, initial-scale=1',
-      },
-      inject: 'head',
-      hash: true,
-      chunks: ['content'],
-    }),
-    new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: path.join(__dirname, 'public/index.html'),
-      meta: {
-        viewport: 'width=device-width, initial-scale=1',
-      },
-      inject: 'head',
-      hash: true,
-      chunks: ['banner'],
-    }),
     new ScriptExtHtmlWebpackPlugin({
-      async: ['banner', 'article', 'content'],
-      module: ['banner', 'article', 'content'],
+      async: webcomponent,
+      module: webcomponent,
     }),
-    new AddAssetHtmlPlugin({
-      filepath: path.join(__dirname, 'public/css/common.css'),
-      files: 'sys.html',
-      hash: true,
-      typeOfAsset: 'css',
-      outputPath: 'css',
-      publicPath: '/css',
-    }),
-    new AddAssetHtmlPlugin({
-      filepath: path.join(__dirname, 'public/css/main.css'),
-      files: ['index.html', 'article.html', 'content.html'],
-      hash: true,
-      typeOfAsset: 'css',
-      outputPath: 'css',
-      publicPath: '/css',
-    }),
-    new AddAssetHtmlPlugin({
-      filepath: path.join(__dirname, 'public/css/reset.css'),
-      files: ['index.html', 'article.html', 'content.html'],
-      hash: true,
-      typeOfAsset: 'css',
-      outputPath: 'css',
-      publicPath: '/css',
-    }),
+    ...htmlWebpackPlugin,
+    ...addAssetHtmlPlugin,
   ],
   resolve: {
     modules: ['node_modules'],

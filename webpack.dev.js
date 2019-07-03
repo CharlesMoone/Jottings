@@ -91,6 +91,7 @@ module.exports = merge(common, {
       .map(manifest => new webpack.DllReferencePlugin({ manifest })),
     new AddAssetHtmlPlugin({
       filepath: path.join(__dirname, 'cache/*.dll.js'),
+      files: ['sys.html'],
       hash: true,
     }),
     new CopyWebpackPlugin([

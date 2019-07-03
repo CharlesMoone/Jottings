@@ -1,3 +1,14 @@
+<style>
+  a {
+    display: flex;
+    flex-flow: column nowrap;
+  }
+  a, a:link, a:active, a:hover, a:focus {
+    text-decoration: initial;
+    color: initial;
+  }
+</style>
+
 <a>
   <h1 class="title"></h1>
   <p>Author: <span class="author"></span></p>
