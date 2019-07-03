@@ -29,3 +29,6 @@ bundle-analyzer-report.html
 
 # special ignore
 server/utils/keys.mjs
+
+# uploads file
+uploads
