@@ -47,7 +47,7 @@
     "koa-router": "^7.4.0",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
-    "mongoose": "^5.5.13",
+    "mongoose": "^5.7.5",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
